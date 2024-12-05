@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          fetch-depth: 0
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -28,7 +28,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Adjust to your AWS region
+          aws-region: us-east-1
 
       - name: Terraform Init
         id: init
@@ -49,7 +49,7 @@ jobs:
         id: plan
         working-directory: ./terraform
         run: |
-          terraform plan -no-color \
+          terraform plan \
           -var="aws_region=us-east-1" \
           -var="vpc_cidr=10.0.0.0/16" \
           -var="environment=dev" \
@@ -65,13 +65,14 @@ jobs:
         run: |
           terraform show -no-color tfplan.binary > plan.txt
           terraform show -json tfplan.binary > plan.json
-
+          
       - name: Setup Infracost
         uses: infracost/actions/setup@v2
         with:
           api-key: ${{ secrets.INFRACOST_API_KEY }}
   
       - name: Generate Infracost Report
+        working-directory: ./terraform
         run: |
           infracost breakdown --path=plan.json \
             --format=json \
@@ -84,22 +85,22 @@ jobs:
         with:
           name: terraform-plan-artifacts
           path: |
-            plan.txt
-            plan.json
-            infracost.txt
-            infracost.json
+            terraform/plan.txt
+            terraform/plan.json
+            terraform/infracost.txt
+            terraform/infracost.json
 
       - name: Update Pull Request
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
-          PLAN: ${{ steps.plan.outputs.stdout }}
+          PLAN: ${{ steps.plan.outcome }}
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const plan = fs.readFileSync('plan.txt', 'utf8');
-            const infracost = fs.readFileSync('infracost.txt', 'utf8');
+            const plan = fs.readFileSync('terraform/plan.txt', 'utf8');
+            const infracost = fs.readFileSync('terraform/infracost.txt', 'utf8');
             
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
