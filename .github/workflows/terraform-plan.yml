@@ -85,10 +85,10 @@ jobs:
   
       - name: Generate Infracost Report
         run: |
-          infracost breakdown --path=plan.json \
+          infracost breakdown --path=terraform/plan.json \
             --format=json \
             --out-file=infracost.json
-          infracost breakdown --path=plan.json \
+          infracost breakdown --path=terraform/plan.json \
             --format=table > infracost.txt
 
       - name: Update Pull Request
