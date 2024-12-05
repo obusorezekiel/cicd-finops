@@ -44,6 +44,7 @@ jobs:
         
       - name: Terraform Plan
         id: plan
+        working-directory: ./terraform
         env:
           TF_VAR_aws_region: "us-east-1"
           TF_VAR_vpc_cidr: "10.0.0.0/16"
