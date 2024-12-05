@@ -65,8 +65,9 @@ jobs:
           -var="instance_type=t2.micro" \
           -var="key_name=ec2-key" \
           -var="domain_name=mytoolings.xyz" \
-          -input=false | tee plan.txt
+          -input=false > plan.txt
           exit ${PIPESTATUS[0]}
+          terraform show -json plan.tfplan > plan.json
 
       - name: List files in the current directory
         run: ls -alh
