@@ -67,6 +67,11 @@ jobs:
           -var="domain_name=mytoolings.xyz" \
           -input=false | tee plan.txt
           exit ${PIPESTATUS[0]}
+      - name: Upload Terraform Plan as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan
+          path: plan.txt
 
       - name: Setup Infracost
         uses: infracost/actions/setup@v2
