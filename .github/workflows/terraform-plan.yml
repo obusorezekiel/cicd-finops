@@ -84,10 +84,10 @@ jobs:
         with:
           name: terraform-plan-artifacts
           path: |
-            terraform/plan.txt
-            terraform/plan.json
-            terraform/infracost.txt
-            terraform/infracost.json
+            plan.txt
+            plan.json
+            infracost.txt
+            infracost.json
 
       - name: Update Pull Request
         uses: actions/github-script@v6
