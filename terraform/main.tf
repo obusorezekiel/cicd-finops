@@ -11,11 +11,10 @@ module "vpc" {
 }
 
 module "security" {
-  source              = "./modules/sg"
-  vpc_id              = module.vpc.vpc_id
-  environment         = var.environment
-  vpc_cidr            = var.vpc_cidr
-  public_subnet_cidrs = var.public_subnet_cidrs
+  source      = "./modules/sg"
+  vpc_id      = module.vpc.vpc_id
+  environment = var.environment
+  vpc_cidr    = var.vpc_cidr
 }
 
 module "ec2_instance" {
