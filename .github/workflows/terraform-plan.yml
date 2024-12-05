@@ -61,7 +61,7 @@ jobs:
           -var="aws_region=us-east-1" \
           -var="vpc_cidr=10.0.0.0/16" \
           -var="environment=dev" \
-          -var="ami_id=ami-04552bb4f4dd38925" \
+          -var="ubuntu_ami=ami-04552bb4f4dd38925" \
           -var="instance_type=t2.micro" \
           -var="key_name=ec2-key" \
           -var="domain_name=mytoolings.xyz" \
