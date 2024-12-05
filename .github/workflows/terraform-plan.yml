@@ -67,6 +67,10 @@ jobs:
           -var="domain_name=mytoolings.xyz" \
           -input=false | tee plan.txt
           exit ${PIPESTATUS[0]}
+
+      - name: Wait for plan.txt to be available
+        run: sleep 5  # Delay to ensure the file is written
+
       - name: Upload Terraform Plan as Artifact
         uses: actions/upload-artifact@v3
         with:
