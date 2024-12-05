@@ -68,14 +68,14 @@ jobs:
           -input=false | tee plan.txt
           exit ${PIPESTATUS[0]}
 
-      - name: Wait for plan.txt to be available
-        run: sleep 5  # Delay to ensure the file is written
-
+      - name: List files in the current directory
+        run: ls -alh
+  
       - name: Upload Terraform Plan as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: terraform-plan
-          path: plan.txt
+          path: plan.txt 
 
       - name: Setup Infracost
         uses: infracost/actions/setup@v2
