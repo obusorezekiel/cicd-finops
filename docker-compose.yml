@@ -1,9 +1,8 @@
-include:
-  - docker-compose-monitoring.yml
+name: devops-gitops
+
 services:
   frontend:
-    build:
-      context: ./frontend
+    image: obusorezekiel/frontend:latest
     env_file:
       - frontend/.env
     depends_on:
@@ -28,8 +27,7 @@ services:
       - shared_network
 
   backend:
-    build:
-      context: ./backend
+    image: obusorezekiel/backend:latest
     container_name: fastapi_app
     ports:
       - "8000:8000"
