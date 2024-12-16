@@ -1,104 +1,169 @@
-### Week 3: Automated CI/CD Pipelines for Infrastructure and Application  
-
-This week, we’re focusing on building **CI/CD pipelines** to automate infrastructure and application deployments. Get ready to master:  
-- **Cloud cost optimization** with cost estimation tools like InfraCost.  
-- **GitOps workflows** for seamless automation.  
-- **Terraform + Ansible integration** for infrastructure management and monitoring stack setup.  
-- **Git branching strategies** for streamlined CI/CD pipelines.  
+Here’s the updated and fully detailed README with all the additional instructions incorporated:
 
 ---
 
-### 💡 **What’s Included?**  
+# Full-Stack FastAPI and React Template - DevOps November CV Challenge
 
-#### **Infrastructure Pipeline**  
-- Use **Terraform** to provision the cloud infrastructure required for the application.  
-- Automatically trigger **Ansible** to set up the **monitoring stack** (Prometheus, Grafana, Loki, etc.).  
-
-#### **Application Pipeline**  
-- Continue working with the **three-tier application stack** from Week 1.  
+Welcome to the **Full-Stack FastAPI and React Template** repository! This project serves as a demo application for the **DevOps November Resume Challenge**, where participants will deploy a full-stack application with a **FastAPI** backend and **ReactJS** frontend using **ChakraUI**. Additionally, participants will set up monitoring and logging tools, configure a reverse proxy, and deploy the application to a cloud platform, showcasing their end-to-end DevOps skills.
 
 ---
 
-### 🌲 **Branch Setup**  
-You’ll work with the following branches:  
+## Challenge Overview
 
-1. **Infrastructure Pipelines:**  
-   - `infra_features`: Used for writing and testing Terraform changes.  
-   - `infra_main`: Main branch for infrastructure.  
+As part of this challenge, your primary goal is to:
 
-2. **Application Pipelines:**  
-   - `integration`: Contains the CI pipeline for building and tagging images.  
-   - `deployment`: Contains the CD pipeline for deploying the application stack.  
-
----
-
-### 📋 **Workflow Details**  
-
-#### **Infrastructure Pipeline**  
-**Branches: `infra_features` → `infra_main`**  
-- **Push to `infra_features`:**  
-  - Run `terraform validate` to check the correctness of configurations.  
-- **PR to `infra_main`:**  
-  - Trigger `terraform plan`, output the plan as a comment in the PR, including cost estimation (e.g., using InfraCost).  
-- **Merge to `infra_main`:**  
-  - Run `terraform apply` with auto-approval to provision resources.  
-  - Trigger Ansible to deploy the monitoring stack on the provisioned infrastructure.  
-
-#### **Application Pipeline**  
-**Branches: `integration` → `deployment`**  
-- **Push to `integration`:**  
-  - Build and tag Docker images for the application.  
-  - Push images to a public Docker Hub repository.  
-  - Update `docker-compose.yml` with the new image tags and commit the changes.  
-
-- **Merge from `integration` to `deployment`:**  
-  - Deploy the application stack to the provisioned infrastructure.  
+1. Dockerize a full-stack application with a FastAPI backend and React frontend.
+2. Configure and deploy monitoring and logging tools including Prometheus, Grafana, Loki, Promtail, and cAdvisor.
+3. Set up a reverse proxy for application routing.
+4. Deploy the application to a cloud platform with proper domain configuration.
+5. Submit a working repository with detailed documentation and screenshots of your deployed application.
 
 ---
 
-### 📋 **Requirements:**  
+## Challenge Requirements
 
-#### **Infrastructure Pipeline**  
-- Use Terraform to automate:  
-  - Validation, planning (with PR comments), and applying configurations.  
-  - Include cost estimation in the PR plan output as a required component.  
-  - Trigger Ansible to deploy the monitoring stack after Terraform apply.  
+1. **Dockerization and Orchestration**:  
+   - Write `Dockerfile`s to containerize both the **React frontend** and **FastAPI backend**.
+   - Create two `docker-compose.yml` files:
+     1. **Application Stack Compose**:  
+        Orchestrate the following services:
+        - React frontend.
+        - FastAPI backend.
+        - PostgreSQL database.
+        - Adminer (for database management).
+        - Reverse Proxy (Traefik or Nginx Proxy Manager).
+     2. **Monitoring Stack Compose**:  
+        Orchestrate the following services:
+        - Prometheus.
+        - Grafana.
+        - Loki and Promtail.
+        - **cAdvisor** for monitoring container performance.
+     - Ensure both Docker Compose files are connected to a common Docker network to allow inter-container communication.
 
-#### **Application Pipeline**  
-- **CI Pipeline (Integration Branch):**  
-  - Build and push Docker images to Docker Hub.  
-  - Update `docker-compose.yml` with the new image tags and commit the change to the Integration Branch.  
-- **CD Pipeline (Deployment Branch):**  
-  - Deploy the application stack to the cloud infrastructure.  
+2. **Reverse Proxy Configuration**:  
+   Use **Traefik** or **Nginx Proxy Manager** in the **Application Stack Compose** to:
+   - Serve the **frontend** on `/` (the root path).
+   - Proxy `/api` to the FastAPI backend.
+   - Proxy `/docs` to the FastAPI backend's Swagger documentation.
+   - Proxy `/prometheus` to the Prometheus web UI (via the Monitoring Stack).
+   - Proxy `/grafana` to the Grafana web UI (via the Monitoring Stack).
+   - Ensure all routes are properly secured and accessible.
+
+3. **Database Configuration**:  
+   - Use PostgreSQL as the backend database.
+   - Configure Adminer for database management and ensure it is accessible via `db.domain`.
+
+4. **Monitoring and Logging**:  
+   - Set up the following tools using the **Monitoring Stack Compose**:
+     - **Prometheus** for collecting application metrics.
+     - **Grafana** for visualizing metrics and logs.
+     - **Loki** and **Promtail** for log aggregation and forwarding.
+     - **cAdvisor** to monitor container metrics and performance.
+   - Ensure Prometheus is scraping metrics from the backend, and Grafana is configured with dashboards for logs and metrics.
+   - Ensure that all monitoring dashboards (Prometheus, Grafana, and cAdvisor) are routed through the reverse proxy (Traefik or Nginx Proxy Manager) in the **Application Stack Compose**.
+   - Create a cAdvisor Dashboard in Grafana**:
+     - Integrate **cAdvisor** with **Grafana** to display container performance metrics such as CPU usage, memory usage, disk I/O, and network I/O.
+     - Create a custom Grafana dashboard that visualizes container metrics from cAdvisor.
+     - Ensure the dashboard has proper panels for the most important container metrics.
+
+   - Add Loki as a Data Source in Grafana**:
+     - Integrate **Loki** into **Grafana** to enable log aggregation and visualization.
+     - Ensure that **Loki** is set up as a data source in **Grafana** and logs from the application and containers are sent to it.
+     - Include a panel in Grafana that visualizes logs from Loki, which could be useful for troubleshooting or monitoring application performance.
+
+5. **Cloud Deployment**:  
+   - Deploy the application stack to a cloud platform (AWS, GCP, or Azure) using Docker Compose.
+   - Set up a domain for your application (e.g., `your-app.domain.com`).
+   - If you don’t have a domain, obtain a free subdomain from [Afraid DNS](https://freedns.afraid.org/).
+   - Configure:
+     - HTTP to redirect to HTTPS.
+     - `www` to redirect to the non-`www` domain.
+
+6. **Article**:  
+   - Write and publish a detailed **Article** about the project. Your article should include:
+     - An overview of the project and its purpose.
+     - Step-by-step instructions on how you containerized, orchestrated, and deployed the application.
+     - Screenshots of your setup, including:
+       - The deployed application.
+       - Grafana dashboards showing metrics and logs.
+       - Reverse proxy configuration.
+     - Challenges you faced and how you resolved them.
+     - Lessons learned and tips for others.
+   - Include the link to your Medium article in your submission.
+---
+## Project Structure
+
+The repository is organized as follows:
+
+- **frontend**: Contains the ReactJS application.
+- **backend**: Contains the FastAPI application and PostgreSQL database integration.
+
+Each directory includes its own README file with detailed instructions:
+
+- [Frontend README](./frontend/README.md)
+- [Backend README](./backend/README.md)
 
 ---
 
-### 📋 **Acceptance Criteria:**  
+## Getting Started
 
-1. **Infrastructure Pipeline:**  
-   - Validation, planning (with PR comments, including cost estimation), and application workflows are functional.  
-   - Ansible playbook is triggered to set up the monitoring stack after Terraform apply.  
+### Clone the Repository
 
-2. **Application Pipeline:**  
-   - CI pipeline builds images, pushes to Docker Hub, updates `docker-compose.yml` and commits the change.  
-   - CD pipeline deploys the application stack to the cloud.  
+Start by cloning this repository to your local machine:
 
-3. **Workflow Organization:**  
-   - Separate `.yml` files for each pipeline.
-        - terraform-validate.yml
-        - terraform-plan.yml
-        - terraform-apply.yml
-        - ansible-monitoring.yml
-        - ci-application.yml
-        - cd-application.yml
+```bash
+git clone <repository-url>
+cd <repository-folder>
+```
+
+
+## Testing and Evaluation
+
+Your hosted application will be evaluated based on the following criteria:  
+
+1. **Dockerization**:  
+   - Verify that the `Dockerfile`s and `docker-compose.yml` work seamlessly to build and run the application.  
+
+2. **Reverse Proxy**:  
+   - Confirm that the application routes are correctly configured (frontend on `/`, backend `/api`, and backend docs `/docs`).  
+
+3. **Database Setup**:  
+   - Ensure PostgreSQL is properly configured and Adminer is accessible via `db.domain`.  
+
+4. **Monitoring and Logging**:  
+   - Test that Prometheus scrapes application metrics and Grafana displays metrics and logs.
+   - Ensure that cAdvisor metrics are displayed properly in the Grafana dashboard.
+   - Ensure that Logs from Loki Can be visualized in Grafana.
+
+5. **Cloud Deployment**:  
+   - Confirm the application is deployed to the cloud and accessible via a public URL.  
+   - Check that HTTP redirects to HTTPS, and `www` redirects to the non-`www` domain.  
+
+6. **Repository Validation**:  
+   - Verify that running `docker-compose up -d` from your repository correctly deploys the application and all supporting services.  
+
+7. **Article**:  
+   - Evaluate the clarity, detail, and technical depth of the published article.  
+
 
 ---
 
-### 📝 **Submission Instructions:**  
-Submit your work via the **GitHub repository link**, including:  
-1. Link to your github repo containing both the infrastructure and application workflows.  
-2. Terraform and Ansible configurations.  
-3. Screenshots of successful execution for all pipelines.  
-4. A **detailed blog post** documenting your process, including an **architectural diagram**.  
+## Submission Guidelines
 
-⏰ **Deadline:** Submit on or before **loading...**.  
+1. Deploy the application stack and ensure all services are running correctly.  
+2. Submit the following:  
+   - A link to your **GitHub repository** containing all files (`Dockerfile`, `docker-compose.yml`, configurations, etc.).  
+   - A link to your **Article**.  
+   - Screenshots of:  
+     - The deployed application.  
+     - Metrics and logs displayed in Grafana.  
+     - Reverse proxy routes and configurations.  
+
+---
+
+**EXPO**
+- To ensure that the services in the Monitoring Stack (e.g., Prometheus, Grafana, cAdvisor, and Loki) are properly routed by the reverse proxy in the Application Stack, both docker-compose.yml files should share the same Docker network. This will enable the reverse proxy in the Application Stack to route traffic to the appropriate services in the Monitoring Stack, despite them being in separate Docker Compose files.
+Additionally, having both stacks on the same Docker network allows cAdvisor to collect container metrics and Promtail to gather logs from the containers in the Application Stack. 
+
+
+Good luck with this Challenge! This is your opportunity to showcase your end-to-end DevOps skills and stand out to potential employers.
